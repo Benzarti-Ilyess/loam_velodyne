@@ -834,7 +834,7 @@ int main(int argc, char **argv) {
   ros::NodeHandle nh;
 
   ros::Subscriber subLaserCloud = nh.subscribe<sensor_msgs::PointCloud2>(
-      "/velodyne_points", 2, laserCloudHandler);
+      "/kitti/velo/pointcloud", 2, laserCloudHandler);
 
   ros::Subscriber subImu =
       nh.subscribe<sensor_msgs::Imu>("/imu/data", 50, imuHandler);
