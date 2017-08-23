@@ -1,0 +1,11 @@
+# Topic Parameters
+
+# Velodyne Pointcloud Topic
+velo_topic: "/velodyne_points"
+# Velodyne Subscriber Queue Size
+velo_queue_size: 2
+
+# IMU Topic
+imu_topic: "/imu/data"
+# IMU Subscriber Queue Size 
+imu_queue_size: 50

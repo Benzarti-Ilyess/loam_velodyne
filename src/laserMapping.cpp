@@ -416,6 +416,7 @@ int main(int argc, char **argv) {
   ros::init(argc, argv, "laserMapping");
   ros::NodeHandle nh;
 
+  // TODO: turn into parameters
   ros::Subscriber subLaserCloudCornerLast =
       nh.subscribe<sensor_msgs::PointCloud2>("/laser_cloud_corner_last", 2,
                                              laserCloudCornerLastHandler);
@@ -1274,6 +1275,7 @@ int main(int argc, char **argv) {
           pcl::toROSMsg(*laserCloudSurround, laserCloudSurround3);
           laserCloudSurround3.header.stamp =
               ros::Time().fromSec(timeLaserOdometry);
+          // TODO: turn into parameters
           laserCloudSurround3.header.frame_id = "/camera_init";
           pubLaserCloudSurround.publish(laserCloudSurround3);
 

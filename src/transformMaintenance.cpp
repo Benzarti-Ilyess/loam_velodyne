@@ -236,6 +236,7 @@ int main(int argc, char **argv) {
   ros::init(argc, argv, "transformMaintenance");
   ros::NodeHandle nh;
 
+  // TODO: turn into parameters
   ros::Subscriber subLaserOdometry = nh.subscribe<nav_msgs::Odometry>(
       "/laser_odom_to_init", 5, laserOdometryHandler);
 

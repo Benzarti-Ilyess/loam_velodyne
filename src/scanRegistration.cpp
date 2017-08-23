@@ -269,24 +269,6 @@ void laserCloudHandler(const sensor_msgs::PointCloud2ConstPtr &laserCloudMsg) {
   std::vector<int> indices;
   pcl::removeNaNFromPointCloud(laserCloudIn, laserCloudIn, indices);
 
-  //ROS_INFO("cloud recieved");
-  if (false) {
-    // write clound to file
-    static bool written = false;
-    if (!written) {
-      std::ofstream ofs("/home/i-yanghao/tmp/normalized_cloud.xyz");
-      if (ofs) {
-        for (int i = 0; i < laserCloudIn.points.size(); i++) {
-          auto & p = laserCloudIn.points[i];
-          float len = sqrt(p.x * p.x + p.y * p.y + p.z * p.z);
-          ofs << p.x / len << " " << p.y / len << " " << p.z / len << std::endl;
-        }
-        ROS_INFO("cloud written");
-        written = true;
-      }
-    }
-  }
-
   int cloudSize = laserCloudIn.points.size(); // number of cloud points
   float startOri =
       -atan2(laserCloudIn.points[0].y,
@@ -739,6 +721,7 @@ void laserCloudHandler(const sensor_msgs::PointCloud2ConstPtr &laserCloudMsg) {
   sensor_msgs::PointCloud2 laserCloudOutMsg;
   pcl::toROSMsg(*laserCloud, laserCloudOutMsg);
   laserCloudOutMsg.header.stamp = laserCloudMsg->header.stamp;
+  // TODO: all of these hardcoded frame ids need to be converted to parameters so that can be used in SegMatch and other things
   laserCloudOutMsg.header.frame_id = "/camera";
   pubLaserCloud.publish(laserCloudOutMsg);
 
@@ -833,11 +816,18 @@ int main(int argc, char **argv) {
   ros::init(argc, argv, "scanRegistration");
   ros::NodeHandle nh;
 
+  std::string velo_topic;
+  nh.getParam("velo_topic", velo_topic);
+  int velo_queue_size;
+  nh.getParam("velo_queue_size", velo_queue_size);
   ros::Subscriber subLaserCloud = nh.subscribe<sensor_msgs::PointCloud2>(
-      "/kitti/velo/pointcloud", 2, laserCloudHandler);
+      velo_topic, velo_queue_size, laserCloudHandler);
 
-  ros::Subscriber subImu =
-      nh.subscribe<sensor_msgs::Imu>("/imu/data", 50, imuHandler);
+  std::string imu_topic;
+  nh.getParam("imu_topic", imu_topic);
+  int imu_queue_size;
+  nh.getParam("imu_queue_size", imu_queue_size);
+  ros::Subscriber subImu = nh.subscribe<sensor_msgs::Imu>(imu_topic, 50, imuHandler);
 
   pubLaserCloud =
       nh.advertise<sensor_msgs::PointCloud2>("/velodyne_cloud_2", 2);

@@ -1,5 +1,7 @@
 <launch>
 
+  <rosparam command="load" file="$(find loam_velodyne)/params/loam_params.yaml"/>
+
   <arg name="rviz" default="true" />
 
   <node pkg="loam_velodyne" type="scanRegistration" name="scanRegistration" output="screen"/>

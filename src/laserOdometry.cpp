@@ -444,6 +444,7 @@ int main(int argc, char **argv) {
   ros::init(argc, argv, "laserOdometry");
   ros::NodeHandle nh;
 
+  // TODO: turn into parameters
   ros::Subscriber subCornerPointsSharp = nh.subscribe<sensor_msgs::PointCloud2>(
       "/laser_cloud_sharp", 2, laserCloudSharpHandler);
 
@@ -538,6 +539,7 @@ int main(int argc, char **argv) {
         pcl::toROSMsg(*laserCloudCornerLast, laserCloudCornerLast2);
         laserCloudCornerLast2.header.stamp =
             ros::Time().fromSec(timeSurfPointsLessFlat);
+        // TODO: turn into parameters
         laserCloudCornerLast2.header.frame_id = "/camera";
         pubLaserCloudCornerLast.publish(laserCloudCornerLast2);
         // publish the first laserCloudSurfLast2
@@ -1139,6 +1141,7 @@ int main(int argc, char **argv) {
         pcl::toROSMsg(*laserCloudCornerLast, laserCloudCornerLast2);
         laserCloudCornerLast2.header.stamp =
             ros::Time().fromSec(timeSurfPointsLessFlat);
+            // TODO: turn into parameters
         laserCloudCornerLast2.header.frame_id = "/camera";
         pubLaserCloudCornerLast.publish(
             laserCloudCornerLast2); // all transformed to sweep end
