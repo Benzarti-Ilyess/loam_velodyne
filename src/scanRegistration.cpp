@@ -51,6 +51,7 @@
 #include <sensor_msgs/PointCloud2.h>
 #include <tf/transform_broadcaster.h>
 #include <tf/transform_datatypes.h>
+#include <tf/transform_listener.h>
 
 using std::sin;
 using std::cos;
@@ -123,12 +124,22 @@ float imuShiftX[imuQueLength] = {0};
 float imuShiftY[imuQueLength] = {0};
 float imuShiftZ[imuQueLength] = {0};
 
+std::string world_frame;
+std::string velo_frame;
+std::string init_velo_frame;
+
+
+// tf::TransformListener* tf_listener;
+// tf::TransformBroadcaster* tf_broadcaster;
 ros::Publisher pubLaserCloud;
 ros::Publisher pubCornerPointsSharp;
 ros::Publisher pubCornerPointsLessSharp;
 ros::Publisher pubSurfPointsFlat;
 ros::Publisher pubSurfPointsLessFlat;
 ros::Publisher pubImuTrans;
+
+// tf::Transform corrected_camera_init;
+bool first_run;
 
 // imu shift from start vector (imuShiftFromStart*Cur) converted into start imu
 // coordinates?
@@ -248,6 +259,45 @@ void AccumulateIMUShift() {
 auto last_time = std::chrono::system_clock::now();
 
 void laserCloudHandler(const sensor_msgs::PointCloud2ConstPtr &laserCloudMsg) {
+
+  // if (first_run)
+  // {  
+
+  //   std::cout << "trying to lookup world_frame (" << world_frame << ") to velo_frame(" << velo_frame << ")" << std::endl;
+
+  //   if (tf_listener->waitForTransform(world_frame, velo_frame, laserCloudMsg->header.stamp, ros::Duration(0.5))) {
+
+  //     // Get the tf transform.
+  //     tf::StampedTransform tf_transform;
+  //     tf_listener->lookupTransform(world_frame, velo_frame, laserCloudMsg->header.stamp, tf_transform);
+
+  //     std::cout << "here, got it's!" << std::endl;
+
+  //     tf::Transform correction;
+  //     correction.setIdentity();
+  //     correction.setRotation(tf::Quaternion(0.5, 0.5, 0.5, 0.5));
+
+  //     corrected_camera_init = tf_transform * correction;
+
+  //     tf_broadcaster->sendTransform(tf::StampedTransform(corrected_camera_init, laserCloudMsg->header.stamp, world_frame, init_velo_frame));
+
+  //     first_run = false;
+
+  //     std::cout << "should be all set!" << std::endl;
+  //   }
+
+  //   else
+  //   {
+  //     ROS_FATAL("UNABLE TO LOOKUP INITIAL TRANSFORM!");
+  //   }  
+  // }
+
+  // else
+  // {
+  //   tf_broadcaster->sendTransform(tf::StampedTransform(corrected_camera_init, laserCloudMsg->header.stamp, world_frame, init_velo_frame));
+  // }
+
+
   if (!systemInited) {
     systemInitCount++;
     if (systemInitCount >= systemDelay) {
@@ -815,6 +865,18 @@ void imuHandler(const sensor_msgs::Imu::ConstPtr &imuIn) {
 int main(int argc, char **argv) {
   ros::init(argc, argv, "scanRegistration");
   ros::NodeHandle nh;
+
+  // tf_listener = new tf::TransformListener(nh);
+  // tf_broadcaster = new tf::TransformBroadcaster();
+
+  first_run = true;
+
+  // // Broadcasting camera_init as the initial velodyne frame but rotated
+  nh.getParam("world_frame", world_frame);
+  nh.getParam("velo_frame", velo_frame);
+  nh.getParam("init_velo_frame", init_velo_frame);
+
+  std::cout << " world_frame: " << world_frame << " init_velo_frame: " << init_velo_frame << std::endl;
 
   std::string velo_topic;
   nh.getParam("velo_topic", velo_topic);
