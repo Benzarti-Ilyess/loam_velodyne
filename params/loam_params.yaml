@@ -1,7 +1,7 @@
 # Topic Parameters
 
 # Velodyne Pointcloud Topic
-velo_topic: "/kitti/velo/pointcloud"
+velo_topic: "/velodyne_points"
 # Velodyne Subscriber Queue Size
 velo_queue_size: 2
 
@@ -16,7 +16,7 @@ imu_queue_size: 50
 world_frame: "world"
 
 # Dynamic velodyne frame
-velo_frame: "velo_link"
+velo_frame: "velodyne"
 
 # Static frame of the velodyne initial starting pose
 init_velo_frame: "camera_init"

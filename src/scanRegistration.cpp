@@ -129,8 +129,8 @@ std::string velo_frame;
 std::string init_velo_frame;
 
 
-// tf::TransformListener* tf_listener;
-// tf::TransformBroadcaster* tf_broadcaster;
+tf::TransformListener* tf_listener;
+tf::TransformBroadcaster* tf_broadcaster;
 ros::Publisher pubLaserCloud;
 ros::Publisher pubCornerPointsSharp;
 ros::Publisher pubCornerPointsLessSharp;
@@ -138,7 +138,7 @@ ros::Publisher pubSurfPointsFlat;
 ros::Publisher pubSurfPointsLessFlat;
 ros::Publisher pubImuTrans;
 
-// tf::Transform corrected_camera_init;
+tf::Transform corrected_camera_init;
 bool first_run;
 
 // imu shift from start vector (imuShiftFromStart*Cur) converted into start imu
@@ -260,42 +260,42 @@ auto last_time = std::chrono::system_clock::now();
 
 void laserCloudHandler(const sensor_msgs::PointCloud2ConstPtr &laserCloudMsg) {
 
-  // if (first_run)
-  // {  
+  if (first_run)
+  {  
 
-  //   std::cout << "trying to lookup world_frame (" << world_frame << ") to velo_frame(" << velo_frame << ")" << std::endl;
+    std::cout << "trying to lookup world_frame (" << world_frame << ") to velo_frame(" << velo_frame << ")" << std::endl;
 
-  //   if (tf_listener->waitForTransform(world_frame, velo_frame, laserCloudMsg->header.stamp, ros::Duration(0.5))) {
+    if (tf_listener->waitForTransform(world_frame, velo_frame, laserCloudMsg->header.stamp, ros::Duration(0.2))) {
 
-  //     // Get the tf transform.
-  //     tf::StampedTransform tf_transform;
-  //     tf_listener->lookupTransform(world_frame, velo_frame, laserCloudMsg->header.stamp, tf_transform);
+      // Get the tf transform.
+      tf::StampedTransform tf_transform;
+      tf_listener->lookupTransform(world_frame, velo_frame, laserCloudMsg->header.stamp, tf_transform);
 
-  //     std::cout << "here, got it's!" << std::endl;
+      std::cout << "here, got it's!" << std::endl;
 
-  //     tf::Transform correction;
-  //     correction.setIdentity();
-  //     correction.setRotation(tf::Quaternion(0.5, 0.5, 0.5, 0.5));
+      tf::Transform correction;
+      correction.setIdentity();
+      correction.setRotation(tf::Quaternion(0.5, 0.5, 0.5, 0.5));
 
-  //     corrected_camera_init = tf_transform * correction;
+      corrected_camera_init = tf_transform * correction;
 
-  //     tf_broadcaster->sendTransform(tf::StampedTransform(corrected_camera_init, laserCloudMsg->header.stamp, world_frame, init_velo_frame));
+      tf_broadcaster->sendTransform(tf::StampedTransform(corrected_camera_init, laserCloudMsg->header.stamp, world_frame, init_velo_frame));
 
-  //     first_run = false;
+      first_run = false;
 
-  //     std::cout << "should be all set!" << std::endl;
-  //   }
+      std::cout << "should be all set!" << std::endl;
+    }
 
-  //   else
-  //   {
-  //     ROS_FATAL("UNABLE TO LOOKUP INITIAL TRANSFORM!");
-  //   }  
-  // }
+    else
+    {
+      ROS_FATAL("UNABLE TO LOOKUP INITIAL TRANSFORM!");
+    }  
+  }
 
-  // else
-  // {
-  //   tf_broadcaster->sendTransform(tf::StampedTransform(corrected_camera_init, laserCloudMsg->header.stamp, world_frame, init_velo_frame));
-  // }
+  else
+  {
+    tf_broadcaster->sendTransform(tf::StampedTransform(corrected_camera_init, laserCloudMsg->header.stamp, world_frame, init_velo_frame));
+  }
 
 
   if (!systemInited) {
@@ -866,8 +866,8 @@ int main(int argc, char **argv) {
   ros::init(argc, argv, "scanRegistration");
   ros::NodeHandle nh;
 
-  // tf_listener = new tf::TransformListener(nh);
-  // tf_broadcaster = new tf::TransformBroadcaster();
+  tf_listener = new tf::TransformListener(nh);
+  tf_broadcaster = new tf::TransformBroadcaster();
 
   first_run = true;
 
