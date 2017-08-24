@@ -512,7 +512,6 @@ int main(int argc, char **argv) {
         fabs(timeSurfPointsFlat - timeSurfPointsLessFlat) < 0.005 &&
         fabs(timeLaserCloudFullRes - timeSurfPointsLessFlat) < 0.005 &&
         fabs(timeImuTrans - timeSurfPointsLessFlat) < 0.005) {
-      ROS_INFO("IN HERE");
       newCornerPointsSharp = false;
       newCornerPointsLessSharp = false;
       newSurfPointsFlat = false;
@@ -553,7 +552,7 @@ int main(int argc, char **argv) {
 
         transformSum[0] += imuPitchStart; // TODO
         transformSum[2] += imuRollStart;  // TODO
-        ROS_WARN ("systemInited");
+        // ROS_WARN ("systemInited");
         systemInited = true;
         continue;
       }
@@ -1135,8 +1134,6 @@ int main(int argc, char **argv) {
         kdtreeSurfLast->setInputCloud(laserCloudSurfLast);
       }
 
-      ROS_WARN("IN HERE!");
-
       if (frameCount >= skipFrameNum + 1) {
         frameCount = 0;
 
@@ -1164,7 +1161,6 @@ int main(int argc, char **argv) {
         laserCloudFullRes3.header.frame_id = "/camera";
         pubLaserCloudFullRes.publish(
             laserCloudFullRes3); // all transformed to sweep end
-        ROS_WARN("HERES IN LASER ODOM!");
 
         // registeredLaserCloudFreq.report();
       }

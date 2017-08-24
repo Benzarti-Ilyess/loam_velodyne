@@ -201,6 +201,9 @@ void laserOdometryHandler(const nav_msgs::Odometry::ConstPtr &laserOdometry) {
   laserOdometry2.pose.pose.position.z = transformMapped[5];
   pubLaserOdometry2Pointer->publish(laserOdometry2);
 
+  // TODO: probably should put the lookup so that camera_init is aligned with tf here?
+
+
   laserOdometryTrans2.stamp_ = laserOdometry->header.stamp;
   laserOdometryTrans2.setRotation(
       tf::Quaternion(-geoQuat.y, -geoQuat.z, geoQuat.x, geoQuat.w));

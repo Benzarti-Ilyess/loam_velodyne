@@ -273,8 +273,6 @@ void laserCloudHandler(const sensor_msgs::PointCloud2ConstPtr &laserCloudMsg) {
       tf::StampedTransform tf_transform;
       tf_listener->lookupTransform(world_frame, velo_frame, laserCloudMsg->header.stamp, tf_transform);
 
-      std::cout << "here, got it!" << std::endl;
-
       tf::Transform correction;
       correction.setIdentity();
       correction.setRotation(tf::Quaternion(0.5, 0.5, 0.5, 0.5));
@@ -284,8 +282,8 @@ void laserCloudHandler(const sensor_msgs::PointCloud2ConstPtr &laserCloudMsg) {
       tf_broadcaster->sendTransform(tf::StampedTransform(corrected_camera_init, laserCloudMsg->header.stamp, world_frame, init_velo_frame));
 
       first_run = false;
+      ROS_INFO("CAMERA_INIT SET!");
 
-      std::cout << "should be all set!" << std::endl;
     }
 
     else
@@ -298,9 +296,6 @@ void laserCloudHandler(const sensor_msgs::PointCloud2ConstPtr &laserCloudMsg) {
   {
     tf_broadcaster->sendTransform(tf::StampedTransform(corrected_camera_init, laserCloudMsg->header.stamp, world_frame, init_velo_frame));
   }
-
-  ROS_INFO("here");
-
 
   if (!systemInited) {
     systemInitCount++;
@@ -349,8 +344,6 @@ void laserCloudHandler(const sensor_msgs::PointCloud2ConstPtr &laserCloudMsg) {
   // PointType minP, maxP;
   // minP.x = minP.y = minP.z = 1e8;
   // maxP.x = maxP.y = maxP.z = -1e8;
-
-  ROS_INFO("and a here");
 
   /// use imu data to register original scanned points into lidar coodinates in
   /// different scan lines
@@ -516,7 +509,7 @@ void laserCloudHandler(const sensor_msgs::PointCloud2ConstPtr &laserCloudMsg) {
     laserCloudScans[scanID].push_back(point);
   }
 
-  ROS_INFO("all points are grouped");
+  // ROS_INFO("all points are grouped");
 
   // ROS_INFO("\n");
   // ROS_INFO("minAngle = %f, maxAngle = %f\n", minAngle, maxAngle);
@@ -570,7 +563,7 @@ void laserCloudHandler(const sensor_msgs::PointCloud2ConstPtr &laserCloudMsg) {
   scanStartInd[0] = 5;
   scanEndInd.back() = cloudSize - 5;
 
-  ROS_INFO("cloudCurvature scanStartInd scanEndInd computed");
+  // ROS_INFO("cloudCurvature scanStartInd scanEndInd computed");
 
   for (int i = 5; i < cloudSize - 6; i++) {
     float diffX = laserCloud->points[i + 1].x - laserCloud->points[i].x;
@@ -639,7 +632,7 @@ void laserCloudHandler(const sensor_msgs::PointCloud2ConstPtr &laserCloudMsg) {
     }
   }
 
-  ROS_INFO("cloudNeighborPicked initialized");
+  // ROS_INFO("cloudNeighborPicked initialized");
 
   pcl::PointCloud<PointType> cornerPointsSharp;     // the outputs
   pcl::PointCloud<PointType> cornerPointsLessSharp; // the outputs
@@ -772,7 +765,7 @@ void laserCloudHandler(const sensor_msgs::PointCloud2ConstPtr &laserCloudMsg) {
     surfPointsLessFlat += surfPointsLessFlatScanDS;
   }
 
-  ROS_INFO("feature points collected");
+  // ROS_INFO("feature points collected");
 
   sensor_msgs::PointCloud2 laserCloudOutMsg;
   pcl::toROSMsg(*laserCloud, laserCloudOutMsg);

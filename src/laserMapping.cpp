@@ -1288,7 +1288,6 @@ int main(int argc, char **argv) {
                               &laserCloudFullRes->points[i]);
         }
 
-        ROS_WARN("HERES IN LASER MAPPING!");
         sensor_msgs::PointCloud2 laserCloudFullRes3;
         pcl::toROSMsg(*laserCloudFullRes, laserCloudFullRes3);
         laserCloudFullRes3.header.stamp =
