@@ -552,7 +552,7 @@ int main(int argc, char **argv) {
 
         transformSum[0] += imuPitchStart; // TODO
         transformSum[2] += imuRollStart;  // TODO
-
+        ROS_WARN ("systemInited");
         systemInited = true;
         continue;
       }
@@ -1161,6 +1161,7 @@ int main(int argc, char **argv) {
         laserCloudFullRes3.header.frame_id = "/camera";
         pubLaserCloudFullRes.publish(
             laserCloudFullRes3); // all transformed to sweep end
+        ROS_WARN("HERES IN LASER ODOM!");
 
         // registeredLaserCloudFreq.report();
       }

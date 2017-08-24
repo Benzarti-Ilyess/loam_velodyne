@@ -271,7 +271,7 @@ void laserCloudHandler(const sensor_msgs::PointCloud2ConstPtr &laserCloudMsg) {
       tf::StampedTransform tf_transform;
       tf_listener->lookupTransform(world_frame, velo_frame, laserCloudMsg->header.stamp, tf_transform);
 
-      std::cout << "here, got it's!" << std::endl;
+      std::cout << "here, got it!" << std::endl;
 
       tf::Transform correction;
       correction.setIdentity();
@@ -875,8 +875,6 @@ int main(int argc, char **argv) {
   nh.getParam("world_frame", world_frame);
   nh.getParam("velo_frame", velo_frame);
   nh.getParam("init_velo_frame", init_velo_frame);
-
-  std::cout << " world_frame: " << world_frame << " init_velo_frame: " << init_velo_frame << std::endl;
 
   std::string velo_topic;
   nh.getParam("velo_topic", velo_topic);
