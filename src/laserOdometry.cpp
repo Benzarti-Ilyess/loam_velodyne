@@ -512,6 +512,7 @@ int main(int argc, char **argv) {
         fabs(timeSurfPointsFlat - timeSurfPointsLessFlat) < 0.005 &&
         fabs(timeLaserCloudFullRes - timeSurfPointsLessFlat) < 0.005 &&
         fabs(timeImuTrans - timeSurfPointsLessFlat) < 0.005) {
+      ROS_INFO("IN HERE");
       newCornerPointsSharp = false;
       newCornerPointsLessSharp = false;
       newSurfPointsFlat = false;
@@ -1133,6 +1134,8 @@ int main(int argc, char **argv) {
         kdtreeCornerLast->setInputCloud(laserCloudCornerLast);
         kdtreeSurfLast->setInputCloud(laserCloudSurfLast);
       }
+
+      ROS_WARN("IN HERE!");
 
       if (frameCount >= skipFrameNum + 1) {
         frameCount = 0;
